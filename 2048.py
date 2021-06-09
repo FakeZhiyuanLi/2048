@@ -15,28 +15,31 @@ layers = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 # Tile Variables
 clock = pygame.time.Clock()
 window = pygame.display.set_mode([WIDTH, HEIGHT])
-TWO = pygame.image.load(os.path.join('2048', 'Assets', '2.png'))
-FOUR = pygame.image.load(os.path.join('2048', 'Assets', '4.png'))
-EIGHT = pygame.image.load(os.path.join('2048', 'Assets', '8.png'))
-SIXTEEN = pygame.image.load(os.path.join('2048', 'Assets', '16.png'))
-THIRTYTWO = pygame.image.load(os.path.join('2048', 'Assets', '32.png'))
-SIXTYFOUR = pygame.image.load(os.path.join('2048', 'Assets', '64.png'))
-ONEHUNDREDTWENTYEIGHT = pygame.image.load(os.path.join('2048', 'Assets', '128.png'))
-TWOHUNDREDFIFTYSIX = pygame.image.load(os.path.join('2048', 'Assets', '256.png'))
-FIVEHUNDREDTWELVE = pygame.image.load(os.path.join('2048', 'Assets', '512.png'))
-ONETHOUSANDTWENTYFOUR = pygame.image.load(os.path.join('2048', 'Assets', '1024.png'))
-TWOTHOUSANDFOURTYEIGHT = pygame.image.load(os.path.join('2048', 'Assets', '2048.png'))
+TWO = pygame.transform.scale(pygame.image.load(os.path.join('2048', 'Assets', '2.png')), (150, 150))
+FOUR = pygame.transform.scale(pygame.image.load(os.path.join('2048', 'Assets', '4.png')), (150, 150))
+EIGHT = pygame.transform.scale(pygame.image.load(os.path.join('2048', 'Assets', '8.png')), (150, 150))
+SIXTEEN = pygame.transform.scale(pygame.image.load(os.path.join('2048', 'Assets', '16.png')), (150, 150))
+THIRTYTWO = pygame.transform.scale(pygame.image.load(os.path.join('2048', 'Assets', '32.png')), (150, 150))
+SIXTYFOUR = pygame.transform.scale(pygame.image.load(os.path.join('2048', 'Assets', '64.png')), (150, 150))
+ONEHUNDREDTWENTYEIGHT = pygame.transform.scale(pygame.image.load(os.path.join('2048', 'Assets', '128.png')), (150, 150))
+TWOHUNDREDFIFTYSIX = pygame.transform.scale(pygame.image.load(os.path.join('2048', 'Assets', '256.png')), (150, 150))
+FIVEHUNDREDTWELVE = pygame.transform.scale(pygame.image.load(os.path.join('2048', 'Assets', '512.png')), (150, 150))
+ONETHOUSANDTWENTYFOUR = pygame.transform.scale(pygame.image.load(os.path.join('2048', 'Assets', '1024.png')), (150, 150))
+TWOTHOUSANDFOURTYEIGHT = pygame.transform.scale(pygame.image.load(os.path.join('2048', 'Assets', '2048.png')), (150, 150))
 
 
 # Outline variables
-# OUTLINE = pygame.Rect(WIDTH / 2, HEIGHT / 2, 400, 400)
+OUTLINE = pygame.Rect(WIDTH / 2 - 300, HEIGHT / 2 - 300, 600, 600)
 
 WHITE = (255, 255, 255)
-# OUTLINE_COLOR = (107, 107, 107)
+OUTLINE_COLOR = (107, 107, 107)
 
 def DRAW_WINDOW():
+
+    # Testing images
+
     window.fill(WHITE)
-    window.blit(TWO, (0, 0))
+    window.blit(TWO, (200, 200))
     window.blit(FOUR, (100, 0))
     window.blit(EIGHT, (200, 0))
     window.blit(SIXTEEN, (300, 0))
@@ -48,8 +51,19 @@ def DRAW_WINDOW():
     window.blit(ONETHOUSANDTWENTYFOUR, (900, 0))
     window.blit(TWOTHOUSANDFOURTYEIGHT, (0, 100))
     
-    # pygame.draw.rect(window, OUTLINE_COLOR, OUTLINE)
-    
+    # Outline
+    pygame.draw.rect(window, OUTLINE_COLOR, OUTLINE, width=8)
+
+    # Vertical
+    pygame.draw.line(window, OUTLINE_COLOR, (350, 200), (350, 800), width=8)
+    pygame.draw.line(window, OUTLINE_COLOR, (500, 200), (500, 800), width=8)
+    pygame.draw.line(window, OUTLINE_COLOR, (650, 200), (650, 800), width=8)
+
+    # Horizontal
+    pygame.draw.line(window, OUTLINE_COLOR, (200, 350), (800, 350), width=8)
+    pygame.draw.line(window, OUTLINE_COLOR, (200, 500), (800, 500), width=8)
+    pygame.draw.line(window, OUTLINE_COLOR, (200, 650), (800, 650), width=8)
+
     pygame.display.update()
 
 
@@ -68,9 +82,29 @@ def tile_generation():
                 tile_gotten = True
     else:
         print("The board is full")
+        # Do something
 def UP():
+    for i in range(1, 0, -1):
+        for j in range(0, 4):
+            if layers[i-1][j] == 0:
+                layers[i-1][j] = layers[i][j]
+                layers[i][j] = 0
+    for i in range(2, 0, -1):
+        for j in range(0, 4):
+            if layers[i-1][j] == 0:
+                layers[i-1][j] = layers[i][j]
+                layers[i][j] = 0
+    for i in range(3, 0, -1):
+        for j in range(0, 4):
+            if layers[i-1][j] == 0:
+                layers[i-1][j] = layers[i][j]
+                layers[i][j] = 0
     tile_generation()
-    print(layers)
+    print()
+    for layer in layers:
+        print(layer)
+
+
 
 
 def main():
@@ -91,6 +125,7 @@ def main():
                     DOWN()
                 if event.key == pygame.K_d:
                     RIGHT()
+
         DRAW_WINDOW()
 
 
