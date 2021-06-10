@@ -182,9 +182,6 @@ def UP():
                     layers[i-1][j] = layers[i][j]
                     layers[i][j] = 0
     tile_generation()
-    print()
-    for layer in layers:
-        print(layer)
     HANDLE_TILES()
 def LEFT():
     reset_layers()
@@ -213,9 +210,6 @@ def LEFT():
                     layers[j][i-1] = layers[j][i]
                     layers[j][i] = 0
     tile_generation()
-    print()
-    for layer in layers:
-        print(layer)
     HANDLE_TILES()
 def RIGHT():
     reset_layers()
@@ -244,9 +238,6 @@ def RIGHT():
                     layers[i][j+1] = layers[i][j]
                     layers[i][j] = 0
     tile_generation()
-    print()
-    for layer in layers:
-        print(layer)
     HANDLE_TILES()
 def DOWN():
     reset_layers()
@@ -275,9 +266,6 @@ def DOWN():
                     layers[j+1][i] = layers[j][i]
                     layers[j][i] = 0
     tile_generation()
-    print()
-    for layer in layers:
-        print(layer)
     HANDLE_TILES()
 
 def HANDLE_TILES():
@@ -309,7 +297,6 @@ def HANDLE_TILES():
             if layers[i][j] == 2048:
                 TWOTHOUSANDFOURTYEIGHT_LIST.append(pygame.Rect(x, y, 150, 150))
             
-            # This line goes last
             x += 150
         y += 150    
         x = 200
