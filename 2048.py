@@ -104,9 +104,46 @@ def UP():
     for layer in layers:
         print(layer)
 
+def LEFT():
+    for i in range(1, 0, -1):
+        for j in range(0, 4):
+            if layers[j][i-1] == 0:
+                layers[j][i-1] = layers[j][i]
+                layers[j][i] = 0
+    for i in range(2, 0, -1):
+        for j in range(0, 4):
+            if layers[j][i-1] == 0:
+                layers[j][i-1] = layers[j][i]
+                layers[j][i] = 0
+    for i in range(3, 0, -1):
+        for j in range(0, 4):
+            if layers[j][i-1] == 0:
+                layers[j][i-1] = layers[j][i]
+                layers[j][i] = 0
+    tile_generation()
+    print()
+    for layer in layers:
+        print(layer)
 
-
-
+def RIGHT():
+    for i in range(0, 4):
+        if layers[i][3] == 0:
+            layers[i][3] = layers[i][2]
+            layers[i][2] = 0
+    for j in range(1, 3):
+        for i in range(0, 4):
+            if layers[i][j+1] == 0:
+                layers[i][j+1] = layers[i][j]
+                layers[i][j+1] = 0
+    for j in range(0, 3):
+        for i in range(0, 4):
+            if layers[i][j+1] == 0:
+                layers[i][j+1] = layers[i][j]
+                layers[i][j+1] = 0
+    tile_generation()
+    print()
+    for layer in layers:
+        print(layer)
 def main():
     running = True
 
@@ -115,7 +152,6 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-                pygame.QUIT()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
                     UP()
@@ -131,3 +167,4 @@ def main():
 
 if  __name__ == '__main__':
     main()
+    
