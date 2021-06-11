@@ -4,16 +4,18 @@ import os
 
 pygame.init()
 pygame.font.init()
+pygame.mixer.init()
 
 # Main Variables
 WIDTH = 1000
 HEIGHT = 1000
 tile_gotten = False
 win = pygame.USEREVENT + 1
+loss = pygame.USEREVENT + 2
 player_score = 0
 
 # Text
-WIN_FONT = pygame.font.SysFont('Comic Sans MS', 100)
+WIN_FONT = pygame.font.SysFont('Comic Sans MS', 70)
 SCORE_FONT = pygame.font.SysFont('Comic Sans MS', 30)
 
 layers = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
@@ -61,6 +63,11 @@ SCORE_BOX_COLOR = (231, 231, 231)
 # Other image variables
 score_box = pygame.Rect(600, 80, 200, 100)
 
+# Music variables
+
+sweep_sound = pygame.mixer.Sound(os.path.join('2048', 'Assets', 'sweep_sound.wav'))
+win_sound = pygame.mixer.Sound(os.path.join('2048', 'Assets', 'win_sound.wav'))
+
 def DRAW_WINDOW():
     window.fill(WHITE)
 
@@ -80,6 +87,12 @@ def DRAW_WINDOW():
         window.blit(ONEHUNDREDTWENTYEIGHT, (onehundredtwentyeight.x, onehundredtwentyeight.y))
     for twohundredfiftysix in TWOHUNDREDFIFTYSIX_LIST:
         window.blit(TWOHUNDREDFIFTYSIX, (twohundredfiftysix.x, twohundredfiftysix.y))
+    for fivehundredtwelve in FIVEHUNDREDTWELVE_LIST:
+        window.blit(FIVEHUNDREDTWELVE, (fivehundredtwelve.x, fivehundredtwelve.y))
+    for onethousandtwentyfour in ONETHOUSANDTWENTYFOUR_LIST:
+        window.blit(ONETHOUSANDTWENTYFOUR, (onethousandtwentyfour.x, onethousandtwentyfour.y))
+    for twothousandfourtyeight in TWOTHOUSANDFOURTYEIGHT_LIST:
+        window.blit(TWOTHOUSANDFOURTYEIGHT, (twothousandfourtyeight.x, twothousandfourtyeight.y))
 
     # Outline
     pygame.draw.rect(window, OUTLINE_COLOR, OUTLINE, width=8)
@@ -156,6 +169,7 @@ def reset_layers():
     TWOTHOUSANDFOURTYEIGHT_LIST.clear()
 
 def UP():
+    sweep_sound.play()
     reset_layers()
     for i in range(1, 0, -1):
         for j in range(0, 4):
@@ -184,6 +198,7 @@ def UP():
     tile_generation()
     HANDLE_TILES()
 def LEFT():
+    sweep_sound.play()
     reset_layers()
     for i in range(1, 0, -1):
         for j in range(0, 4):
@@ -212,6 +227,7 @@ def LEFT():
     tile_generation()
     HANDLE_TILES()
 def RIGHT():
+    sweep_sound.play()
     reset_layers()
     for i in range(0, 4):
         if layers[i][3] == layers[i][2]:
@@ -240,6 +256,7 @@ def RIGHT():
     tile_generation()
     HANDLE_TILES()
 def DOWN():
+    sweep_sound.play()
     reset_layers()
     for i in range(0, 4):
         if layers[3][i] == layers[2][i]:
@@ -301,15 +318,32 @@ def HANDLE_TILES():
         y += 150    
         x = 200
 
-def CHECK_WIN():
-    for layer in layers:
-        for element in layer:
-            if element == 2048:
-                pygame.event.post(win)
+def CHECK_WIN(has_won):
+    if not has_won:
+        for layer in layers:
+            for element in layer:
+                if element == 2048:
+                    win_sound.play()
+                    pygame.event.post(pygame.event.Event(win))
 
+def CHECK_LOSS():
+    for layer in layers:
+        for tile in layer:
+            if tile == 0:
+                return 0
+    # Check if any tiles can merge with the tiles below
+    for i in range(0, 3):
+        for j in range(0, 4):
+            if layers[i][j] == layers[i+1][j]:
+                return 0
+    for i in range(0, 4):
+        for j in range(0, 3):
+            if layers[i][j] == layers[i][j+1]:
+                return 0
+    pygame.event.post(pygame.event.Event(loss))
 def main():
     running = True
-
+    has_won = False
     while running:
         clock.tick(60)
         for event in pygame.event.get():
@@ -326,13 +360,25 @@ def main():
                     DOWN()
                 if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
                     RIGHT()
-                if event.key == pygame.K_v:
-                    print(player_score)
             if event.type == win:
                 win_text = WIN_FONT.render("You won with " + str(player_score) + " score!", True, GRAY)
-                WIN.blit(win_text, (WIDTH / 2, HEIGHT / 2))
+                window.blit(win_text, (WIDTH / 2 - 400, HEIGHT / 2 - 100))
+                pygame.display.update()
+                pygame.time.delay(3000)
+                has_won = True
+            if event.type == loss:
+                lose_text = WIN_FONT.render("You loss with " + str(player_score) + " score!", True, GRAY)
+                window.blit(lose_text, (WIDTH / 2 - 400, HEIGHT / 2 - 100))
+                reset_layers()
+                for layer in layers:
+                    layer.clear()
+                    for i in range(4):
+                        layer.append(0)
+                pygame.display.update()
+                pygame.time.delay(3000)
 
-        CHECK_WIN()
+        CHECK_WIN(has_won)
+        CHECK_LOSS()
         DRAW_WINDOW()
 
     pygame.quit()
