@@ -376,7 +376,22 @@ def main():
                         layer.append(0)
                 pygame.display.update()
                 pygame.time.delay(3000)
-
+                DRAW_WINDOW()
+                temp_running = True
+                temp_text = WIN_FONT.render("Press C to continue or P to exit", True, GRAY)
+                while temp_running:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            temp_running = False
+                            running = False
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_c:
+                                temp_running = False
+                            if event.key == pygame.K_p:
+                                temp_running = False
+                                running = False
+                    window.blit(temp_text, (WIDTH / 2 - 500, HEIGHT / 2 - 100))
+                    pygame.display.update()
         CHECK_WIN(has_won)
         CHECK_LOSS()
         DRAW_WINDOW()
@@ -385,4 +400,3 @@ def main():
 
 if  __name__ == '__main__':
     main()
-    
