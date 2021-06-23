@@ -344,6 +344,9 @@ def CHECK_LOSS():
 def main():
     running = True
     has_won = False
+    tile_generation()
+    tile_generation()
+    HANDLE_TILES()
     while running:
         clock.tick(60)
         for event in pygame.event.get():
